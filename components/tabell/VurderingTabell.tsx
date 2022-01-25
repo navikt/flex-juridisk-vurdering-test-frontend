@@ -18,7 +18,8 @@ export default function VurderingTabell(p: VurderingTabellProps) {
                     field: 'vurdering.tidsstempel',
                     filtering: false,
                     sorting: true,
-                    defaultSort: 'desc'
+                    defaultSort: 'desc',
+                    type: 'datetime'
                 },
                 { title: 'Fnr', field: 'fnr', filtering: false },
                 { title: 'Kilde', field: 'vurdering.@kilde' },
