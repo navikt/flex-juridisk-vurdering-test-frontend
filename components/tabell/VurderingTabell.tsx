@@ -31,25 +31,6 @@ export default function VurderingTabell(p: VurderingTabellProps) {
                 { title: 'lovverksversjon', field: 'vurdering.lovverksversjon' },
                 { title: 'utfall', field: 'vurdering.utfall' },
                 {
-                    title: 'Input',
-                    render: rowData => <ReactJson src={rowData.vurdering.input} collapsed={true}
-                                                  enableClipboard={false}
-                                                  displayDataTypes={false}
-                                                  displayObjectSize={false}
-                                                  quotesOnKeys={false}
-                    />
-                },
-                {
-                    title: 'Output',
-                    render: rowData => (rowData.vurdering.output &&
-                        <ReactJson src={rowData.vurdering.output} collapsed={true}
-                                   enableClipboard={false}
-                                   displayDataTypes={false}
-                                   displayObjectSize={false}
-                                   quotesOnKeys={false}
-                        />)
-                },
-                {
                     title: 'Komplett kafka melding',
                     render: rowData => (
                         <ReactJson src={rowData.vurdering} collapsed={true}
