@@ -5,10 +5,11 @@ export interface VurderingWrapper{
 }
 
 export interface Vurdering{
-    'fødselsnummer': string,
+    fodselsnummer: string,
     '@id': string,
     '@kilde': string,
     lovverk: string,
+    lovverksversjon: string,
     paragraf: string,
     sporing: Map<string,string>,
     tidsstempel: string,

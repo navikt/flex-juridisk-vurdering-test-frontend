@@ -28,11 +28,8 @@ export default function VurderingTabell(p: VurderingTabellProps) {
                 { title: 'ledd', field: 'vurdering.ledd' },
                 { title: 'punktum', field: 'vurdering.punktum' },
                 { title: 'bokstav', field: 'vurdering.bokstav' },
+                { title: 'lovverksversjon', field: 'vurdering.lovverksversjon' },
                 { title: 'utfall', field: 'vurdering.utfall' },
-                {
-                    title: 'versjonAvKode', field: 'vurdering.versjonAvKode',
-                    render: rowData => <span onClick={()=> window.alert(rowData.vurdering.versjonAvKode)}>?</span>
-                },
                 {
                     title: 'Input',
                     render: rowData => <ReactJson src={rowData.vurdering.input} collapsed={true}
@@ -46,6 +43,16 @@ export default function VurderingTabell(p: VurderingTabellProps) {
                     title: 'Output',
                     render: rowData => (rowData.vurdering.output &&
                         <ReactJson src={rowData.vurdering.output} collapsed={true}
+                                   enableClipboard={false}
+                                   displayDataTypes={false}
+                                   displayObjectSize={false}
+                                   quotesOnKeys={false}
+                        />)
+                },
+                {
+                    title: 'Komplett kafka melding',
+                    render: rowData => (
+                        <ReactJson src={rowData.vurdering} collapsed={true}
                                    enableClipboard={false}
                                    displayDataTypes={false}
                                    displayObjectSize={false}
