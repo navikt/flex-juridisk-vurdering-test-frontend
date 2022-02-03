@@ -1,3 +1,4 @@
+import dateFormat from 'dateformat'
 import MaterialTable from 'material-table'
 import ReactJson from 'react-json-view'
 
@@ -17,14 +18,20 @@ export default function VurderingTabell(p: VurderingTabellProps) {
                 {
                     title: 'Tidsstempel',
                     field: 'vurdering.tidsstempel',
+                    customSort: (data1: VurderingWrapper, data2: VurderingWrapper) => data1.vurdering?.tidsstempel?.localeCompare(data2.vurdering?.tidsstempel || '') || -1,
                     filtering: false,
                     sorting: true,
                     defaultSort: 'desc',
-                    type: 'datetime'
+                    render: rowData => {
+                        if (rowData.vurdering.tidsstempel) {
+                            return dateFormat(rowData.vurdering.tidsstempel, 'dS mmm yyyy HH:MM:ss')
+                        }
+                    }
                 },
                 { title: 'Kilde', field: 'vurdering.kilde' },
                 {
                     title: 'Lov',
+                    customFilterAndSearch: (f: any, rowData: VurderingWrapper) => skapParagraf(rowData.vurdering).includes(f),
                     render: rowData => skapParagraf(rowData.vurdering)
                 },
                 { title: 'utfall', field: 'vurdering.utfall' },
@@ -60,6 +67,7 @@ export default function VurderingTabell(p: VurderingTabellProps) {
             }
             data={p.data}
             options={{
+                search: false,
                 filtering: true,
                 paging: false,
             }}

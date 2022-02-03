@@ -15,7 +15,7 @@ export interface Vurdering{
     bokstav?: string,
     punktum?: number,
     sporing: Map<string,string[]>,
-    tidsstempel: string,
+    tidsstempel?: string,
     utfall: string,
     versjonAvKode: string,
     input: Map<String,any>
