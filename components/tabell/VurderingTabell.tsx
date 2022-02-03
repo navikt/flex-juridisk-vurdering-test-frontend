@@ -2,6 +2,7 @@ import MaterialTable from 'material-table'
 import ReactJson from 'react-json-view'
 
 import { Vurdering, VurderingWrapper } from '../../types/vurdering'
+import { validerSkjema } from './validering'
 
 interface VurderingTabellProps {
     data: VurderingWrapper[],
@@ -38,7 +39,25 @@ export default function VurderingTabell(p: VurderingTabellProps) {
                                    quotesOnKeys={false}
                         />)
                 },
-            ]}
+                {
+                    title: 'Validert',
+                    render: rowData => {
+                        let result = validerSkjema(rowData.vurdering)
+                        if (result.valid) {
+                            return '✅'
+                        }
+                        return (
+                            <ReactJson style={{ backgroundColor: 'pink' }}
+                                       src={result} collapsed={true}
+                                       enableClipboard={false}
+                                       displayDataTypes={false}
+                                       displayObjectSize={false}
+                                       quotesOnKeys={false}
+                            />)
+                    }
+                },
+            ]
+            }
             data={p.data}
             options={{
                 filtering: true,
