@@ -1,16 +1,25 @@
 import dateFormat from 'dateformat'
+import jsonschema from 'jsonschema'
 import MaterialTable from 'material-table'
 import ReactJson from 'react-json-view'
 
 import { Vurdering, VurderingWrapper } from '../../types/vurdering'
-import { validerSkjema } from './validering'
+
+
+const validator = new jsonschema.Validator()
+
 
 interface VurderingTabellProps {
     data: VurderingWrapper[],
     fnr: string,
+    skjema: object,
 }
 
 export default function VurderingTabell(p: VurderingTabellProps) {
+    function validerSkjema(vurdering: Vurdering) {
+        return validator.validate(vurdering, p.skjema)
+    }
+
     return (
         <MaterialTable
             title={`Vurderinger for ${p.fnr}`}
