@@ -43,7 +43,11 @@ export default function VurderingTabell(p: VurderingTabellProps) {
                     customFilterAndSearch: (f: any, rowData: VurderingWrapper) => skapParagraf(rowData.vurdering).includes(f),
                     render: rowData => skapParagraf(rowData.vurdering)
                 },
-                { title: 'utfall', field: 'vurdering.utfall' },
+                {
+                    title: 'utfall',
+                    customFilterAndSearch: (f: any, rowData: VurderingWrapper) => skapUtfall(rowData.vurdering).includes(f) || rowData.vurdering.utfall.includes(f),
+                    render: rowData => skapUtfall(rowData.vurdering)
+                },
                 {
                     title: 'Kafkamelding',
                     customFilterAndSearch: (f: any, rowData: VurderingWrapper) => JSON.stringify(rowData.vurdering).includes(f),
@@ -99,6 +103,22 @@ function skapParagraf(v: Vurdering) {
     }
     return lov
 }
+
+function skapUtfall(v: Vurdering) {
+    switch (v.utfall) {
+        case 'VILKAR_BEREGNET':
+            return '🤖 vilkår beregnet'
+        case 'VILKAR_IKKE_OPPFYLT':
+            return '❌ vilkår ikke oppfylt'
+        case 'VILKAR_OPPFYLT':
+            return '👍 vilkår oppfylt'
+        case 'VILKAR_UAVKLART':
+            return '❓ vilkår uavklart'
+
+    }
+    return v.utfall
+}
+
 
 function tallTilNte(tall: number): String {
     switch (tall) {
