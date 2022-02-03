@@ -30,6 +30,7 @@ export default function VurderingTabell(p: VurderingTabellProps) {
                 { title: 'utfall', field: 'vurdering.utfall' },
                 {
                     title: 'Kafkamelding',
+                    customFilterAndSearch: (f: any, rowData: VurderingWrapper) => JSON.stringify(rowData.vurdering).includes(f),
                     render: rowData => (
                         <ReactJson src={rowData.vurdering} collapsed={true}
                                    enableClipboard={false}
