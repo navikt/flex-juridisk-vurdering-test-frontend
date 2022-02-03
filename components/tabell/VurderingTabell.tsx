@@ -32,19 +32,21 @@ export default function VurderingTabell(p: VurderingTabellProps) {
                     sorting: true,
                     defaultSort: 'desc',
                     render: rowData => {
-                        if (rowData.vurdering.tidsstempel) {
-                            return dateFormat(rowData.vurdering.tidsstempel, 'dS mmm yyyy HH:MM:ss')
+                        if (rowData.vurdering.tidsstempel || rowData.opprettet) {
+                            return dateFormat(rowData.vurdering.tidsstempel || rowData.opprettet, 'dS mmm yyyy HH:MM:ss')
                         }
                     }
                 },
                 { title: 'Kilde', field: 'vurdering.kilde' },
                 {
                     title: 'Lov',
+                    customSort: (data1: VurderingWrapper, data2: VurderingWrapper) => skapParagraf(data1.vurdering).localeCompare(skapParagraf(data2.vurdering) || '') || -1,
                     customFilterAndSearch: (f: any, rowData: VurderingWrapper) => skapParagraf(rowData.vurdering).includes(f),
                     render: rowData => skapParagraf(rowData.vurdering)
                 },
                 {
                     title: 'utfall',
+                    customSort: (data1: VurderingWrapper, data2: VurderingWrapper) => data1.vurdering.utfall.localeCompare(data2.vurdering.utfall) || -1,
                     customFilterAndSearch: (f: any, rowData: VurderingWrapper) => skapUtfall(rowData.vurdering).includes(f) || rowData.vurdering.utfall.includes(f),
                     render: rowData => skapUtfall(rowData.vurdering)
                 },
