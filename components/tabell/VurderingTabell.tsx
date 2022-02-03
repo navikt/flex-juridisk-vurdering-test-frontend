@@ -1,7 +1,7 @@
 import MaterialTable from 'material-table'
 import ReactJson from 'react-json-view'
 
-import { VurderingWrapper } from '../../types/vurdering'
+import { Vurdering, VurderingWrapper } from '../../types/vurdering'
 
 interface VurderingTabellProps {
     data: VurderingWrapper[],
@@ -22,16 +22,14 @@ export default function VurderingTabell(p: VurderingTabellProps) {
                     type: 'datetime'
                 },
                 { title: 'Fnr', field: 'fnr', filtering: false },
-                { title: 'Kilde', field: 'vurdering.@kilde' },
-                { title: 'lovverk', field: 'vurdering.lovverk' },
-                { title: 'paragraf', field: 'vurdering.paragraf' },
-                { title: 'ledd', field: 'vurdering.ledd' },
-                { title: 'punktum', field: 'vurdering.punktum' },
-                { title: 'bokstav', field: 'vurdering.bokstav' },
-                { title: 'lovverksversjon', field: 'vurdering.lovverksversjon' },
+                { title: 'Kilde', field: 'vurdering.kilde' },
+                {
+                    title: 'Lov',
+                    render: rowData => skapParagraf(rowData.vurdering)
+                },
                 { title: 'utfall', field: 'vurdering.utfall' },
                 {
-                    title: 'Komplett kafka melding',
+                    title: 'Kafkamelding',
                     render: rowData => (
                         <ReactJson src={rowData.vurdering} collapsed={true}
                                    enableClipboard={false}
@@ -48,4 +46,37 @@ export default function VurderingTabell(p: VurderingTabellProps) {
             }}
         />
     )
+}
+
+function skapParagraf(v: Vurdering) {
+    let lov = v.lovverk + ' $' + v.paragraf
+    if (v.ledd) {
+        lov += ' ' + tallTilNte(v.ledd) + ' ledd'
+    }
+    if (v.bokstav) {
+        lov += ' bokstav ' + v.bokstav
+    }
+    if (v.punktum) {
+        lov += ' ' + tallTilNte(v.punktum) + ' punktum'
+    }
+    return lov
+}
+
+function tallTilNte(tall: number): String {
+    switch (tall) {
+        case 1:
+            return 'første'
+        case 2:
+            return 'andre'
+        case 3:
+            return 'tredje'
+        case 4:
+            return 'fjerde'
+        case 5:
+            return 'femte'
+        case 6:
+            return 'sjette'
+
+    }
+    return String(tall)
 }

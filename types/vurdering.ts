@@ -6,12 +6,15 @@ export interface VurderingWrapper{
 
 export interface Vurdering{
     fodselsnummer: string,
-    '@id': string,
-    '@kilde': string,
+    id: string,
+    kilde: string,
     lovverk: string,
     lovverksversjon: string,
     paragraf: string,
-    sporing: Map<string,string>,
+    ledd?: number,
+    bokstav?: string,
+    punktum?: number,
+    sporing: Map<string,string[]>,
     tidsstempel: string,
     utfall: string,
     versjonAvKode: string,
