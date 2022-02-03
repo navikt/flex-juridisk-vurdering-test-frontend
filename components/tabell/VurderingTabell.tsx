@@ -45,7 +45,7 @@ export default function VurderingTabell(p: VurderingTabellProps) {
                     render: rowData => skapParagraf(rowData.vurdering)
                 },
                 {
-                    title: 'utfall',
+                    title: 'Utfall',
                     customSort: (data1: VurderingWrapper, data2: VurderingWrapper) => data1.vurdering.utfall.localeCompare(data2.vurdering.utfall) || -1,
                     customFilterAndSearch: (f: any, rowData: VurderingWrapper) => skapUtfall(rowData.vurdering).includes(f) || rowData.vurdering.utfall.includes(f),
                     render: rowData => skapUtfall(rowData.vurdering)
