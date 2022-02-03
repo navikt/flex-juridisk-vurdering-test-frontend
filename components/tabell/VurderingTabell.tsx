@@ -22,7 +22,6 @@ export default function VurderingTabell(p: VurderingTabellProps) {
                     defaultSort: 'desc',
                     type: 'datetime'
                 },
-                { title: 'Fnr', field: 'fnr', filtering: false },
                 { title: 'Kilde', field: 'vurdering.kilde' },
                 {
                     title: 'Lov',
