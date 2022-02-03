@@ -51,6 +51,7 @@ export default function VurderingTabell(p: VurderingTabellProps) {
                         <ReactJson src={rowData.vurdering} collapsed={true}
                                    enableClipboard={false}
                                    displayDataTypes={false}
+                                   name={false}
                                    displayObjectSize={false}
                                    quotesOnKeys={false}
                         />)
@@ -67,6 +68,7 @@ export default function VurderingTabell(p: VurderingTabellProps) {
                                        src={result} collapsed={true}
                                        enableClipboard={false}
                                        displayDataTypes={false}
+                                       name={false}
                                        displayObjectSize={false}
                                        quotesOnKeys={false}
                             />)
