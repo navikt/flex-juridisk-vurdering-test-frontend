@@ -95,7 +95,7 @@ export default function VurderingTabell(p: VurderingTabellProps) {
 }
 
 function skapParagraf(v: Vurdering) {
-    let lov = v.lovverk + ' $' + v.paragraf
+    let lov = v.lovverk + ' §' + v.paragraf
     if (v.ledd) {
         lov += ' ' + tallTilNte(v.ledd) + ' ledd'
     }
