@@ -11,7 +11,8 @@ const validator = new jsonschema.Validator()
 
 interface VurderingTabellProps {
     data: VurderingWrapper[],
-    fnr: string,
+    tittel: string,
+    skjulFnr: boolean,
     skjema: object,
 }
 
@@ -22,8 +23,9 @@ export default function VurderingTabell(p: VurderingTabellProps) {
 
     return (
         <MaterialTable
-            title={`Vurderinger for ${p.fnr}`}
+            title={p.tittel}
             columns={[
+                { title: 'Fnr', field: 'vurdering.fodselsnummer', hidden: p.skjulFnr },
                 {
                     title: 'Tidsstempel',
                     field: 'vurdering.tidsstempel',
