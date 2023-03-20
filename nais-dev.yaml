@@ -9,7 +9,7 @@ spec:
   image: {{ image }}
   port: 8080
   ingresses:
-    - "https://sykepenger-juridisk-vurdering.dev.intern.nav.no"
+    - "https://sykepenger-juridisk-vurdering.intern.dev.nav.no"
   replicas:
     min: 1
     max: 2
