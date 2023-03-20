@@ -18,7 +18,7 @@ const FnrPage: NextPage<Props> = ({ skjema }) => {
     const {
         data,
         error
-    } = useSWR<VurderingWrapper[]>(`https://flex-juridisk-vurdering-test-backend.dev.nav.no/api/vurderinger/${fnr}`, fetcher)
+    } = useSWR<VurderingWrapper[]>(`https://flex-juridisk-vurdering-test-backend.intern.dev.nav.no/api/vurderinger/${fnr}`, fetcher)
 
     const VurderingTabell = dynamic(
         () => import('../components/tabell/VurderingTabell'),
