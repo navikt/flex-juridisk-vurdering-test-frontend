@@ -1,22 +1,24 @@
 name: Push
 on: push
-env:
-  APP: flex-juridisk-vurdering-test-frontend
-  branchname: ${{ github.ref_name }}
 jobs:
   build-and-publish:
     name: Bygg, test og push Docker image
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    outputs:
+      image: ${{ steps.docker-build-push.outputs.image }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v1
-      - uses: actions/cache@v2
+        uses: actions/checkout@v3
+      - uses: actions/cache@v3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ${{ github.workspace }}/.next/cache
           # Generate a new cache whenever packages or source files change.
@@ -24,53 +26,36 @@ jobs:
           # If source files changed but packages didn't, rebuild from a prior cache.
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}-
-      - name: Generer versjon og image navn
-        run: |
-          TIME=$(TZ="Europe/Oslo" date +%Y.%m.%d-%H.%M)
-          COMMIT=$(git rev-parse --short=8 HEAD)
-          VERSION=$TIME-$COMMIT
-          echo "IMAGE=docker.pkg.github.com/${GITHUB_REPOSITORY}/$APP:$VERSION" >> $GITHUB_ENV
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-      - run: echo $VERSION > VERSION.txt
-      - name: Last opp VERSION til neste job
-        uses: actions/upload-artifact@v1
-        with:
-          name: VERSION.txt
-          path: VERSION.txt
       - name: Install npm dependencies
         run: yarn
       - name: Run lint
         run: yarn lint
       - name: Build application
         run: yarn build
-      - name: Docker login
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
-      - name: Bygg og push Docker image
-        if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/dev-')
-        run: |
-            docker build . -f Dockerfile -t ${IMAGE}
-            docker push ${IMAGE}
+      - name: docker-build-push
+        if: github.ref_name == 'master' || startsWith(github.ref_name, 'dev-')
+        uses: nais/docker-build-push@v0
+        id: docker-build-push
+        with:
+          team: flex
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+
 
 
   deploy-to-dev-gcp:
-    if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/dev-')
-    name: Deploy to dev-gcp
-    needs: build-and-publish
+    if: github.ref_name == 'master' || startsWith(github.ref_name, 'dev-')
+    name: Deploy til dev-gcp
     runs-on: ubuntu-latest
+    needs: build-and-publish
     concurrency: deploy-to-dev-gcp
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/download-artifact@v1
-        with:
-          name: VERSION.txt
-          path: .
-      - run: echo "VERSION=`cat VERSION.txt`" >> $GITHUB_ENV
-      - run: echo "IMAGE=docker.pkg.github.com/${GITHUB_REPOSITORY}/$APP:$VERSION" >> $GITHUB_ENV
-      - name: Deploy to dev-gcp
-        uses: nais/deploy/actions/deploy@v1
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - uses: nais/deploy/actions/deploy@v1
+        name: Deploy to dev-gcp
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          IMAGE: ${{ needs.build-and-publish.outputs.image }}
           CLUSTER: dev-gcp
           RESOURCE: nais-dev.yaml
