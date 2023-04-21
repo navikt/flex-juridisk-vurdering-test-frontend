@@ -19,7 +19,7 @@ spec:
       memory: 128Mi
     requests:
       cpu: 100m
-      memory: 64Mi
+      memory: 80Mi
   liveness:
     path: api/health
   readiness:
