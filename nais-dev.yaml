@@ -16,7 +16,6 @@ spec:
     cpuThresholdPercentage: 50
   resources:
     limits:
-      cpu: 200m
       memory: 128Mi
     requests:
       cpu: 100m
@@ -25,3 +24,6 @@ spec:
     path: api/health
   readiness:
     path: api/health
+  startup:
+    path: api/health
+    initialDelay: 10
