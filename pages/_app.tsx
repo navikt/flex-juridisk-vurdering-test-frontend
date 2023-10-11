@@ -9,10 +9,6 @@ function MyApp({ Component, pageProps }: AppProps) {
             <Head>
                 <title>Juridisk vurdering test frontend</title>
                 <meta name="robots" content="noindex" />
-                <link
-                    rel="stylesheet"
-                    href="https://fonts.googleapis.com/icon?family=Material+Icons"
-                />
             </Head>
 
             <Component {...pageProps} />
