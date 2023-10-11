@@ -27,3 +27,7 @@ spec:
   startup:
     path: api/health
     initialDelay: 10
+  accessPolicy:
+    outbound:
+      external:
+      - host: raw.githubusercontent.com
