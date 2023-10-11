@@ -7,6 +7,7 @@ COPY /.next ./.next
 COPY /node_modules ./node_modules
 COPY /package.json ./package.json
 
-CMD ["npm", "start"]
+ENV PORT=8080
+CMD ["./node_modules/next/dist/bin/next", "start"]
 
 EXPOSE 8080
