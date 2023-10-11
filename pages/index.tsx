@@ -1,13 +1,12 @@
 import type { NextPage } from 'next'
 
-import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
   return (
-    <div className={styles.container}>
+    <div >
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
+      <main >
+        <h1>
           Juridisk vurdering test frontend
         </h1>
       </main>

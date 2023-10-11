@@ -1,10 +1,9 @@
+import { Table } from '@navikt/ds-react'
 import dateFormat from 'dateformat'
 import jsonschema from 'jsonschema'
-import MaterialTable from 'material-table'
 import ReactJson from 'react-json-view'
 
 import { Vurdering, VurderingWrapper } from '../../types/vurdering'
-
 
 const validator = new jsonschema.Validator()
 
@@ -22,75 +21,85 @@ export default function VurderingTabell(p: VurderingTabellProps) {
     }
 
     return (
-        <MaterialTable
-            title={p.tittel}
-            columns={[
-                { title: 'Fnr', field: 'vurdering.fodselsnummer', hidden: p.skjulFnr },
+        <Table>
+            <Table.Header>
+                <Table.HeaderCell>
+                    Fnr
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                    Tidsstempel
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                    Kilde
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                    Lov
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                    Utfall
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                    Kafkamelding
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                    Validert
+                </Table.HeaderCell>
+            </Table.Header>
+            <Table.Body>
+
+
                 {
-                    title: 'Tidsstempel',
-                    field: 'vurdering.tidsstempel',
-                    customSort: (data1: VurderingWrapper, data2: VurderingWrapper) => data1.vurdering?.tidsstempel?.localeCompare(data2.vurdering?.tidsstempel || '') || -1,
-                    filtering: false,
-                    sorting: true,
-                    defaultSort: 'desc',
-                    render: rowData => {
-                        if (rowData.vurdering.tidsstempel || rowData.opprettet) {
-                            return dateFormat(rowData.vurdering.tidsstempel || rowData.opprettet, 'dS mmm yyyy HH:MM:ss')
-                        }
-                    }
-                },
-                { title: 'Kilde', field: 'vurdering.kilde' },
-                {
-                    title: 'Lov',
-                    customSort: (data1: VurderingWrapper, data2: VurderingWrapper) => skapParagraf(data1.vurdering).localeCompare(skapParagraf(data2.vurdering) || '') || -1,
-                    customFilterAndSearch: (f: any, rowData: VurderingWrapper) => skapParagraf(rowData.vurdering).includes(f),
-                    render: rowData => skapParagraf(rowData.vurdering)
-                },
-                {
-                    title: 'Utfall',
-                    customSort: (data1: VurderingWrapper, data2: VurderingWrapper) => data1.vurdering.utfall.localeCompare(data2.vurdering.utfall) || -1,
-                    customFilterAndSearch: (f: any, rowData: VurderingWrapper) => skapUtfall(rowData.vurdering).includes(f) || rowData.vurdering.utfall.includes(f),
-                    render: rowData => skapUtfall(rowData.vurdering)
-                },
-                {
-                    title: 'Kafkamelding',
-                    customFilterAndSearch: (f: any, rowData: VurderingWrapper) => JSON.stringify(rowData.vurdering).includes(f),
-                    render: rowData => (
-                        <ReactJson src={rowData.vurdering} collapsed={true}
-                                   enableClipboard={false}
-                                   displayDataTypes={false}
-                                   name={false}
-                                   displayObjectSize={false}
-                                   quotesOnKeys={false}
-                        />)
-                },
-                {
-                    title: 'Validert',
-                    render: rowData => {
-                        let result = validerSkjema(rowData.vurdering)
-                        if (result.valid) {
-                            return '✅'
-                        }
-                        return (
-                            <ReactJson style={{ backgroundColor: 'pink' }}
-                                       src={result} collapsed={true}
-                                       enableClipboard={false}
-                                       displayDataTypes={false}
-                                       name={false}
-                                       displayObjectSize={false}
-                                       quotesOnKeys={false}
-                            />)
-                    }
-                },
-            ]
-            }
-            data={p.data}
-            options={{
-                search: false,
-                filtering: true,
-                paging: false,
-            }}
-        />
+                    p.data.sort((a, b) => {
+                        return a.vurdering.tidsstempel?.localeCompare(b.vurdering.tidsstempel || '') || -1
+                    })
+                        .map((rowData, i) => {
+
+                            const validert = validerSkjema(rowData.vurdering)
+                            return <Table.Row key={i}>
+                                <Table.DataCell>
+                                    {rowData.vurdering.fodselsnummer}
+
+                                </Table.DataCell>
+                                <Table.DataCell>
+                                    {dateFormat(rowData.vurdering.tidsstempel || rowData.opprettet, 'dS mmm yyyy HH:MM:ss')}
+                                </Table.DataCell>
+                                <Table.DataCell>
+                                    {rowData.vurdering.kilde}
+                                </Table.DataCell>
+                                <Table.DataCell>
+                                    {skapParagraf(rowData.vurdering)}
+                                </Table.DataCell>
+                                <Table.DataCell>
+                                    {skapUtfall(rowData.vurdering)}
+                                </Table.DataCell>
+                                <Table.DataCell>
+                                    <ReactJson src={rowData.vurdering} collapsed={true}
+                                               enableClipboard={false}
+                                               displayDataTypes={false}
+                                               name={false}
+                                               displayObjectSize={false}
+                                               quotesOnKeys={false}
+                                    />
+                                </Table.DataCell>
+                                <Table.DataCell>
+                                    {validert.valid && '✅'}
+                                    {!validert.valid && <ReactJson style={{ backgroundColor: 'pink' }}
+                                                                   src={validert} collapsed={true}
+                                                                   enableClipboard={false}
+                                                                   displayDataTypes={false}
+                                                                   name={false}
+                                                                   displayObjectSize={false}
+                                                                   quotesOnKeys={false}
+                                    />}
+                                </Table.DataCell>
+                            </Table.Row>
+
+                        })
+                }
+
+            </Table.Body>
+        </Table>
+
     )
 }
 
@@ -142,3 +151,77 @@ function tallTilNte(tall: number): String {
     }
     return String(tall)
 }
+
+
+/**
+ *
+ *  <MaterialTable
+ *             title={p.tittel}
+ *             columns={[
+ *                 { title: 'Fnr', field: 'vurdering.fodselsnummer', hidden: p.skjulFnr },
+ *                 {
+ *                     title: 'Tidsstempel',
+ *                     field: 'vurdering.tidsstempel',
+ *                     customSort: (data1: VurderingWrapper, data2: VurderingWrapper) => data1.vurdering?.tidsstempel?.localeCompare(data2.vurdering?.tidsstempel || '') || -1,
+ *                     filtering: false,
+ *                     sorting: true,
+ *                     defaultSort: 'desc',
+ *                     render: rowData => {
+ *                         if (rowData.vurdering.tidsstempel || rowData.opprettet) {
+ *                             return dateFormat(rowData.vurdering.tidsstempel || rowData.opprettet, 'dS mmm yyyy HH:MM:ss')
+ *                         }
+ *                     }
+ *                 },
+ *                 { title: 'Kilde', field: 'vurdering.kilde' },
+ *                 {
+ *                     title: 'Lov',
+ *                     customSort: (data1: VurderingWrapper, data2: VurderingWrapper) => skapParagraf(data1.vurdering).localeCompare(skapParagraf(data2.vurdering) || '') || -1,
+ *                     customFilterAndSearch: (f: any, rowData: VurderingWrapper) => skapParagraf(rowData.vurdering).includes(f),
+ *                     render: rowData => skapParagraf(rowData.vurdering)
+ *                 },
+ *                 {
+ *                     title: 'Utfall',
+ *                     customSort: (data1: VurderingWrapper, data2: VurderingWrapper) => data1.vurdering.utfall.localeCompare(data2.vurdering.utfall) || -1,
+ *                     customFilterAndSearch: (f: any, rowData: VurderingWrapper) => skapUtfall(rowData.vurdering).includes(f) || rowData.vurdering.utfall.includes(f),
+ *                     render: rowData => skapUtfall(rowData.vurdering)
+ *                 },
+ *                 {
+ *                     title: 'Kafkamelding',
+ *                     customFilterAndSearch: (f: any, rowData: VurderingWrapper) => JSON.stringify(rowData.vurdering).includes(f),
+ *                     render: rowData => (
+ *                         <ReactJson src={rowData.vurdering} collapsed={true}
+ *                                    enableClipboard={false}
+ *                                    displayDataTypes={false}
+ *                                    name={false}
+ *                                    displayObjectSize={false}
+ *                                    quotesOnKeys={false}
+ *                         />)
+ *                 },
+ *                 {
+ *                     title: 'Validert',
+ *                     render: rowData => {
+ *                         let result = validerSkjema(rowData.vurdering)
+ *                         if (result.valid) {
+ *                             return '✅'
+ *                         }
+ *                         return (
+ *                             <ReactJson style={{ backgroundColor: 'pink' }}
+ *                                        src={result} collapsed={true}
+ *                                        enableClipboard={false}
+ *                                        displayDataTypes={false}
+ *                                        name={false}
+ *                                        displayObjectSize={false}
+ *                                        quotesOnKeys={false}
+ *                             />)
+ *                     }
+ *                 },
+ *             ]
+ *             }
+ *             data={p.data}
+ *             options={{
+ *                 search: false,
+ *                 filtering: true,
+ *                 paging: false,
+ *             }}
+ *         />
+ */
