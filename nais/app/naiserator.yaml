@@ -6,10 +6,10 @@ metadata:
   labels:
     team: flex
 spec:
-  image: {{ image }}
+  image: {{image}}
   port: 8080
   ingresses:
-    - "https://sykepenger-juridisk-vurdering.intern.dev.nav.no"
+    - {{ingress}}
   replicas:
     min: 1
     max: 2

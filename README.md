@@ -1,6 +1,6 @@
 # flex-juridisk-vurdering-test-backend
 
-Frontend for jurdisk vurdering test
+Frontend for jurdisk vurdering test. Viser innhold på topicet.
 
 # Henvendelser
 
