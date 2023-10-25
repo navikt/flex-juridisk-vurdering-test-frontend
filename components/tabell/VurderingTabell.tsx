@@ -1,7 +1,8 @@
 import { Table } from '@navikt/ds-react'
 import dateFormat from 'dateformat'
 import jsonschema from 'jsonschema'
-import ReactJson from 'react-json-view'
+
+import {JsonView, allExpanded, darkStyles, defaultStyles, collapseAllNested} from 'react-json-view-lite';
 
 import { Vurdering, VurderingWrapper } from '../../types/vurdering'
 
@@ -73,23 +74,13 @@ export default function VurderingTabell(p: VurderingTabellProps) {
                                     {skapUtfall(rowData.vurdering)}
                                 </Table.DataCell>
                                 <Table.DataCell>
-                                    <ReactJson src={rowData.vurdering} collapsed={true}
-                                               enableClipboard={false}
-                                               displayDataTypes={false}
-                                               name={false}
-                                               displayObjectSize={false}
-                                               quotesOnKeys={false}
+                                    <JsonView data={rowData.vurdering}  shouldExpandNode={()=>false}  style={darkStyles}
                                     />
                                 </Table.DataCell>
                                 <Table.DataCell>
                                     {validert.valid && '✅'}
-                                    {!validert.valid && <ReactJson style={{ backgroundColor: 'pink' }}
-                                                                   src={validert} collapsed={true}
-                                                                   enableClipboard={false}
-                                                                   displayDataTypes={false}
-                                                                   name={false}
-                                                                   displayObjectSize={false}
-                                                                   quotesOnKeys={false}
+                                    {!validert.valid && <JsonView
+                                        data={validert}  shouldExpandNode={collapseAllNested} style={darkStyles}
                                     />}
                                 </Table.DataCell>
                             </Table.Row>
