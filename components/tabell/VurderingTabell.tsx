@@ -1,100 +1,81 @@
 import { Table } from '@navikt/ds-react'
 import dateFormat from 'dateformat'
 import jsonschema from 'jsonschema'
-
-import {JsonView, allExpanded, darkStyles, defaultStyles, collapseAllNested} from 'react-json-view-lite';
+import { JsonView, darkStyles, collapseAllNested } from 'react-json-view-lite'
+import { ReactElement } from 'react'
 
 import { Vurdering, VurderingWrapper } from '../../types/vurdering'
 
 const validator = new jsonschema.Validator()
 
-
 interface VurderingTabellProps {
-    data: VurderingWrapper[],
-    tittel: string,
-    skjulFnr: boolean,
-    skjema: object,
+    data: VurderingWrapper[]
+    tittel: string
+    skjulFnr: boolean
+    skjema: object
 }
 
-export default function VurderingTabell(p: VurderingTabellProps) {
-    function validerSkjema(vurdering: Vurdering) {
+export default function VurderingTabell(p: VurderingTabellProps): ReactElement {
+    function validerSkjema(vurdering: Vurdering): jsonschema.ValidatorResult {
         return validator.validate(vurdering, p.skjema)
     }
 
     return (
         <Table>
             <Table.Header>
-                <Table.HeaderCell>
-                    Fnr
-                </Table.HeaderCell>
-                <Table.HeaderCell>
-                    Tidsstempel
-                </Table.HeaderCell>
-                <Table.HeaderCell>
-                    Kilde
-                </Table.HeaderCell>
-                <Table.HeaderCell>
-                    Lov
-                </Table.HeaderCell>
-                <Table.HeaderCell>
-                    Utfall
-                </Table.HeaderCell>
-                <Table.HeaderCell>
-                    Kafkamelding
-                </Table.HeaderCell>
-                <Table.HeaderCell>
-                    Validert
-                </Table.HeaderCell>
+                <Table.HeaderCell>Fnr</Table.HeaderCell>
+                <Table.HeaderCell>Tidsstempel</Table.HeaderCell>
+                <Table.HeaderCell>Kilde</Table.HeaderCell>
+                <Table.HeaderCell>Lov</Table.HeaderCell>
+                <Table.HeaderCell>Utfall</Table.HeaderCell>
+                <Table.HeaderCell>Kafkamelding</Table.HeaderCell>
+                <Table.HeaderCell>Validert</Table.HeaderCell>
             </Table.Header>
             <Table.Body>
-
-
-                {
-                    p.data.sort((a, b) => {
+                {p.data
+                    .sort((a, b) => {
                         return a.vurdering.tidsstempel?.localeCompare(b.vurdering.tidsstempel || '') || -1
                     })
-                        .map((rowData, i) => {
-
-                            const validert = validerSkjema(rowData.vurdering)
-                            return <Table.Row key={i}>
+                    .map((rowData, i) => {
+                        const validert = validerSkjema(rowData.vurdering)
+                        return (
+                            <Table.Row key={i}>
+                                <Table.DataCell>{rowData.vurdering.fodselsnummer}</Table.DataCell>
                                 <Table.DataCell>
-                                    {rowData.vurdering.fodselsnummer}
-
+                                    {dateFormat(
+                                        rowData.vurdering.tidsstempel || rowData.opprettet,
+                                        'dS mmm yyyy HH:MM:ss',
+                                    )}
                                 </Table.DataCell>
+                                <Table.DataCell>{rowData.vurdering.kilde}</Table.DataCell>
+                                <Table.DataCell>{skapParagraf(rowData.vurdering)}</Table.DataCell>
+                                <Table.DataCell>{skapUtfall(rowData.vurdering)}</Table.DataCell>
                                 <Table.DataCell>
-                                    {dateFormat(rowData.vurdering.tidsstempel || rowData.opprettet, 'dS mmm yyyy HH:MM:ss')}
-                                </Table.DataCell>
-                                <Table.DataCell>
-                                    {rowData.vurdering.kilde}
-                                </Table.DataCell>
-                                <Table.DataCell>
-                                    {skapParagraf(rowData.vurdering)}
-                                </Table.DataCell>
-                                <Table.DataCell>
-                                    {skapUtfall(rowData.vurdering)}
-                                </Table.DataCell>
-                                <Table.DataCell>
-                                    <JsonView data={rowData.vurdering}  shouldExpandNode={()=>false}  style={darkStyles}
+                                    <JsonView
+                                        data={rowData.vurdering}
+                                        shouldExpandNode={() => false}
+                                        style={darkStyles}
                                     />
                                 </Table.DataCell>
                                 <Table.DataCell>
                                     {validert.valid && '✅'}
-                                    {!validert.valid && <JsonView
-                                        data={validert}  shouldExpandNode={collapseAllNested} style={darkStyles}
-                                    />}
+                                    {!validert.valid && (
+                                        <JsonView
+                                            data={validert}
+                                            shouldExpandNode={collapseAllNested}
+                                            style={darkStyles}
+                                        />
+                                    )}
                                 </Table.DataCell>
                             </Table.Row>
-
-                        })
-                }
-
+                        )
+                    })}
             </Table.Body>
         </Table>
-
     )
 }
 
-function skapParagraf(v: Vurdering) {
+function skapParagraf(v: Vurdering): string {
     let lov = v.lovverk + ' §' + v.paragraf
     if (v.ledd) {
         lov += ' ' + tallTilNte(v.ledd) + ' ledd'
@@ -108,7 +89,7 @@ function skapParagraf(v: Vurdering) {
     return lov
 }
 
-function skapUtfall(v: Vurdering) {
+function skapUtfall(v: Vurdering): string {
     switch (v.utfall) {
         case 'VILKAR_BEREGNET':
             return '🤖 vilkår beregnet'
@@ -118,13 +99,11 @@ function skapUtfall(v: Vurdering) {
             return '👍 vilkår oppfylt'
         case 'VILKAR_UAVKLART':
             return '❓ vilkår uavklart'
-
     }
     return v.utfall
 }
 
-
-function tallTilNte(tall: number): String {
+function tallTilNte(tall: number): string {
     switch (tall) {
         case 1:
             return 'første'
@@ -138,11 +117,9 @@ function tallTilNte(tall: number): String {
             return 'femte'
         case 6:
             return 'sjette'
-
     }
     return String(tall)
 }
-
 
 /**
  *

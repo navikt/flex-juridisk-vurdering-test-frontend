@@ -1,35 +1,44 @@
 {
-  "name": "flex-juridisk-vurdering-test-frontend",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start -p 8080",
-    "lint": "next lint",
-    "lint:fix": "next lint --fix"
-  },
-  "dependencies": {
-    "@date-io/core": "^2.13.1",
-    "@emotion/react": "^11.9.0",
-    "@emotion/styled": "^11.8.1",
-    "@navikt/ds-css": "^5.6.5",
-    "@navikt/ds-react": "^5.6.5",
-    "dateformat": "^5.0.3",
-    "jsonschema": "^1.4.1",
-    "next": "13.5.4",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-json-view-lite": "^1.1.0",
-    "swr": "^2.2.4"
-  },
-  "devDependencies": {
-    "@types/dateformat": "^5.0.0",
-    "@types/node": "20.8.4",
-    "@types/react": "18.2.28",
-    "@typescript-eslint/eslint-plugin": "^6.7.5",
-    "eslint": "8.51.0",
-    "eslint-config-next": "13.5.4",
-    "eslint-plugin-simple-import-sort": "^10.0.0",
-    "typescript": "5.2.2"
-  }
+    "name": "flex-juridisk-vurdering-test-frontend",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start -p 8080",
+        "prettier:write": "prettier --write .",
+        "prettier:check": "prettier --check .",
+        "lint": "next lint",
+        "lint:fix": "next lint --fix",
+        "format": "npm run prettier:write && npm run lint:fix"
+    },
+    "dependencies": {
+        "@date-io/core": "^2.13.1",
+        "@emotion/react": "^11.9.0",
+        "@emotion/styled": "^11.8.1",
+        "@navikt/ds-css": "^5.6.5",
+        "@navikt/ds-react": "^5.6.5",
+        "dateformat": "^5.0.3",
+        "jsonschema": "^1.4.1",
+        "next": "13.5.4",
+        "react": "18.2.0",
+        "react-dom": "18.2.0",
+        "react-json-view-lite": "^1.1.0",
+        "swr": "^2.2.4"
+    },
+    "devDependencies": {
+        "@types/dateformat": "^5.0.0",
+        "@types/node": "20.8.4",
+        "@types/react": "18.2.28",
+        "@navikt/eslint-config-teamsykmelding": "^4.5.0",
+        "eslint": "8.51.0",
+        "eslint-config-next": "13.5.4",
+        "typescript": "5.2.2"
+    },
+    "eslintConfig": {
+        "extends": [
+            "@navikt/eslint-config-teamsykmelding",
+            "next/core-web-vitals"
+        ]
+    },
+    "prettier": "@navikt/eslint-config-teamsykmelding/prettier"
 }

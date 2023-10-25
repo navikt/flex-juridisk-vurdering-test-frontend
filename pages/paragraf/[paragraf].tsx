@@ -6,24 +6,21 @@ import useSWR from 'swr'
 
 import { VurderingWrapper } from '../../types/vurdering'
 
-const fetcher = (url: string) => fetch(url).then(r => r.json())
+const fetcher = (url: string): Promise<VurderingWrapper[]> => fetch(url).then((r) => r.json())
 
 interface Props {
-    skjema: object;
+    skjema: object
 }
 
 const ParagrafPage: NextPage<Props> = ({ skjema }) => {
     const router = useRouter()
     const { paragraf } = router.query
-    const {
-        data,
-        error
-    } = useSWR<VurderingWrapper[]>(`https://flex-juridisk-vurdering-test-backend.dev.nav.no/api/vurderinger/?paragraf=${paragraf}`, fetcher)
-
-    const VurderingTabell = dynamic(
-        () => import('../../components/tabell/VurderingTabell'),
-        { ssr: false }
+    const { data, error } = useSWR<VurderingWrapper[]>(
+        `https://flex-juridisk-vurdering-test-backend.dev.nav.no/api/vurderinger/?paragraf=${paragraf}`,
+        fetcher,
     )
+
+    const VurderingTabell = dynamic(() => import('../../components/tabell/VurderingTabell'), { ssr: false })
 
     if (error) {
         return <strong>OOPS. Noe gikk feil</strong>
@@ -33,17 +30,13 @@ const ParagrafPage: NextPage<Props> = ({ skjema }) => {
         return <strong>Laster...</strong>
     }
 
-    return (
-        <VurderingTabell data={data} tittel={`Vurderinger for §${paragraf}`} skjema={skjema} skjulFnr={false} />
-    )
+    return <VurderingTabell data={data} tittel={`Vurderinger for §${paragraf}`} skjema={skjema} skjulFnr={false} />
 }
 
-
-ParagrafPage.getInitialProps = async({ req }) => {
+ParagrafPage.getInitialProps = async () => {
     const res = await fetch('https://raw.githubusercontent.com/navikt/helse/main/subsumsjon/json-schema-1.0.0.json')
     const skjema = await res.json()
     return { skjema }
 }
 
 export default ParagrafPage
-

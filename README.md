@@ -1,9 +1,8 @@
 # flex-juridisk-vurdering-test-backend
 
-Frontend for jurdisk vurdering test. Viser innhold på topicet.
+Frontend for jurdisk vurdering test. Viser innhold på topicet og validerer mot skjema.
 
 # Henvendelser
-
 
 Spørsmål knyttet til koden eller prosjektet kan stilles til flex@nav.no
 
