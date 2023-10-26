@@ -1,6 +1,7 @@
 # flex-juridisk-vurdering-test-backend
 
-Frontend for jurdisk vurdering test. Viser innhold på topicet og validerer mot skjema. Fetcher data klientside med CORS.
+Frontend for jurdisk vurdering test. Viser innhold på topicet og validerer mot skjema.
+Fetcher data klientside med CORS.
 
 # Henvendelser
 
