@@ -13,3 +13,5 @@ jobs:
       actions: read
       security-events: write
     secrets: inherit
+    with:
+      dev-only: true
