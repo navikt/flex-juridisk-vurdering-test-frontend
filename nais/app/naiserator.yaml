@@ -1,15 +1,15 @@
-apiVersion: "nais.io/v1alpha1"
-kind: "Application"
+apiVersion: 'nais.io/v1alpha1'
+kind: 'Application'
 metadata:
   name: flex-juridisk-vurdering-test-frontend
   namespace: flex
   labels:
     team: flex
 spec:
-  image: {{ image }}
+  image: {{image}}
   port: 8080
   ingresses:
-    - "https://sykepenger-juridisk-vurdering.intern.dev.nav.no"
+    - {{ingress}}
   replicas:
     min: 1
     max: 2
@@ -30,4 +30,4 @@ spec:
   accessPolicy:
     outbound:
       external:
-      - host: raw.githubusercontent.com
+        - host: raw.githubusercontent.com
