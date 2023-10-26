@@ -5,7 +5,7 @@ on:
 
 jobs:
   felles-workflow:
-    uses: navikt/flex-github-actions-workflows/.github/workflows/next-js-lightweight.yml@dev-only-cluster
+    uses: navikt/flex-github-actions-workflows/.github/workflows/next-js-lightweight.yml@master
     permissions:
       contents: read
       id-token: write
