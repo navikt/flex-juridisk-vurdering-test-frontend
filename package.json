@@ -1,6 +1,9 @@
 {
     "name": "flex-juridisk-vurdering-test-frontend",
     "private": true,
+    "engines": {
+        "node": "20"
+    },
     "scripts": {
         "dev": "next dev",
         "build": "next build",
