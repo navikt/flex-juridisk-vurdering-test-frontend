@@ -30,7 +30,7 @@
     },
     "devDependencies": {
         "@types/dateformat": "^5.0.2",
-        "@types/node": "20.11.24",
+        "@types/node": "20.11.27",
         "@types/react": "18.2.61",
         "@navikt/eslint-config-teamsykmelding": "^5.1.0",
         "eslint": "8.57.0",
