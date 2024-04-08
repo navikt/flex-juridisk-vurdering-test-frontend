@@ -17,7 +17,7 @@
     "dependencies": {
         "@date-io/core": "^3.0.0",
         "@emotion/react": "^11.11.4",
-        "@emotion/styled": "^11.11.0",
+        "@emotion/styled": "^11.11.5",
         "@navikt/ds-css": "^6.3.6",
         "@navikt/ds-react": "^6.3.6",
         "dateformat": "^5.0.3",
